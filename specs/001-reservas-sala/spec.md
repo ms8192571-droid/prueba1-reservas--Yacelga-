@@ -21,6 +21,25 @@ para tener dónde trabajar con mi grupo.
    reserva queda registrada a mi nombre.
 2. **Dado** que elijo como inicio las 10:00 y como fin las 09:00, **Cuando** intento reservar,
    **Entonces** la reserva se rechaza con el mensaje "La hora de fin debe ser posterior a la de inicio".
+3. **Dado** que la sala A ya tiene una reserva de 09:00 a 10:00, **Cuando** intento reservar la
+   misma sala de 09:30 a 10:30, **Entonces** la reserva se rechaza porque los horarios se solapan.
+4. **Dado** que la sala A ya tiene una reserva de 09:00 a 10:00, **Cuando** intento reservar la
+   misma sala de 10:00 a 11:00, **Entonces** la reserva queda registrada porque el inicio coincide
+   exactamente con el fin de la reserva anterior y no hay solapamiento.
+5. **Dado** que la sala A ya tiene una reserva de 09:00 a 10:00, **Cuando** intento reservar la
+   misma sala de 08:30 a 09:30, **Entonces** la reserva se rechaza porque la nueva reserva empieza
+   antes de que termine la reserva existente y comparte parte del intervalo.
+6. **Dado** que la sala A ya tiene una reserva de 09:00 a 11:00, **Cuando** intento reservar la
+   misma sala de 09:30 a 10:30, **Entonces** la reserva se rechaza porque la nueva reserva queda
+   completamente dentro de un horario ya ocupado.
+7. **Dado** que la sala A ya tiene una reserva de 09:00 a 10:00, **Cuando** intento reservar la
+   misma sala de 09:00 a 10:00, **Entonces** la reserva se rechaza porque ambos intervalos coinciden.
+8. **Dado** que la sala A ya tiene una reserva de 09:00 a 10:00, **Cuando** intento reservar la
+   misma sala de 09:00 a 10:30, **Entonces** la reserva se rechaza porque empieza al mismo tiempo y
+   termina después de la reserva existente.
+9. **Dado** que la sala A ya tiene una reserva de 09:00 a 10:00, **Cuando** intento reservar la
+   sala B de 09:30 a 10:30, **Entonces** la reserva queda registrada porque los horarios de salas
+   distintas no se solapan entre sí.
 
 ### Edge Cases
 
