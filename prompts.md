@@ -19,8 +19,14 @@ modifique `lib/domain/crear_reserva.dart` para implementar la validación de sol
 - Crea un archivo llamado `RESPUESTAS.md` en la raíz.  &#x20;
 - Agrega las siguientes 3 secciones con sus títulos exactos:  &#x20;
   - `## Escenarios que elegí y por qué`
+
+    &#x20; &#x20;
   - `## Riesgo más grave del repositorio`
+
+    &#x20; &#x20;
   - `## ¿La regla protege la app real?`
+
+    &#x20; &#x20;
 - Explica tus decisiones citando siempre evidencias en formato `ruta:línea` (ejemplo: `lib/domain/crear_reserva.dart:12`).  &#x20;
 - La extensión recomendada es de hasta **400 palabras** en total.  &#x20;
 
