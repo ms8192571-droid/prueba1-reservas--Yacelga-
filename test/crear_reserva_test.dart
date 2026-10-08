@@ -39,4 +39,137 @@ void main() {
     expect(resultado.mensaje, 'La hora de fin debe ser posterior a la de inicio');
     expect(repositorio.reservas, isEmpty);
   });
+
+  test('rechaza una reserva que se solapa parcialmente al final', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u2',
+      inicio: hora(9, 30),
+      fin: hora(10, 30),
+    ));
+
+    expect(resultado.aceptada, isFalse);
+    expect(repositorio.reservas, hasLength(1));
+  });
+
+  test('acepta una reserva que empieza cuando termina la anterior', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u2',
+      inicio: hora(10),
+      fin: hora(11),
+    ));
+
+    expect(resultado.aceptada, isTrue);
+    expect(repositorio.reservas, hasLength(2));
+  });
+
+  test('rechaza una reserva que empieza antes y se solapa con la existente', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u2',
+      inicio: hora(8, 30),
+      fin: hora(9, 30),
+    ));
+
+    expect(resultado.aceptada, isFalse);
+    expect(repositorio.reservas, hasLength(1));
+  });
+
+  test('rechaza una reserva completamente contenida en la existente', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(11),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u2',
+      inicio: hora(9, 30),
+      fin: hora(10, 30),
+    ));
+
+    expect(resultado.aceptada, isFalse);
+    expect(repositorio.reservas, hasLength(1));
+  });
+
+  test('rechaza una reserva con el mismo intervalo que la existente', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u2',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    expect(resultado.aceptada, isFalse);
+    expect(repositorio.reservas, hasLength(1));
+  });
+
+  test('rechaza una reserva que empieza al mismo tiempo y termina después', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u2',
+      inicio: hora(9),
+      fin: hora(10, 30),
+    ));
+
+    expect(resultado.aceptada, isFalse);
+    expect(repositorio.reservas, hasLength(1));
+  });
+
+  test('acepta el mismo horario si corresponde a otra sala', () async {
+    await repositorio.guardar(SolicitudReserva(
+      salaId: 'Sala A',
+      usuarioId: 'u1',
+      inicio: hora(9),
+      fin: hora(10),
+    ));
+
+    final resultado = await crearReserva(SolicitudReserva(
+      salaId: 'Sala B',
+      usuarioId: 'u2',
+      inicio: hora(9, 30),
+      fin: hora(10, 30),
+    ));
+
+    expect(resultado.aceptada, isTrue);
+    expect(repositorio.reservas, hasLength(2));
+  });
 }
